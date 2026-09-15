@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jihed Services</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    body {
+      background-color: #050505;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* BACKGROUND ANIMATED CANVAS (NJOUM) */
+    #stars-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* OVERLAY ENTER SCREEN */
+    #enter-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #050505;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      cursor: pointer;
+      transition: opacity 0.6s ease, visibility 0.6s;
+    }
+    #enter-screen .icon {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+    #enter-screen h2 {
+      font-size: 14px;
+      letter-spacing: 2px;
+      color: #888;
+      font-weight: 500;
+    }
+
+    /* MAIN CONTAINER */
+    .main-container {
+      width: 100%;
+      max-width: 950px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+      z-index: 1;
+      animation: fadeIn 0.8s ease forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .shop-header {
+      text-align: center;
+    }
+    .shop-header h1 {
+      font-size: 32px;
+      letter-spacing: 1px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    /* PLAYER CARD WITH VOLUME CONTROL */
+    .player-card {
+      background: rgba(18, 18, 18, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(12px);
+      border-radius: 14px;
+      padding: 12px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: #888;
+      min-width: 250px;
+    }
+    .player-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      gap: 15px;
+    }
+    .player-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .volume-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+    }
+    .volume-box i {
+      font-size: 11px;
+      color: #666;
+    }
+    .volume-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.15);
+      outline: none;
+      cursor: pointer;
+    }
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ffffff;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+    .volume-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    .services-section {
+      width: 100%;
+      text-align: center;
+    }
+    .section-title {
+      font-size: 14px;
+      letter-spacing: 1px;
+      color: #888;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      width: 100%;
+    }
+
+    .big-card {
+      background: rgba(18, 18, 18, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      min-height: 280px;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    .big-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .card-icon {
+      font-size: 32px;
+      color: #fff;
+      margin-bottom: 15px;
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .card-desc {
+      font-size: 13px;
+      color: #777;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    .order-btn {
+      width: 100%;
+      background: #ffffff;
+      color: #000;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .order-btn:hover { opacity: 0.85; }
+
+    .info-section {
+      width: 100%;
+      background: rgba(18, 18, 18, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 25px;
+      text-align: center;
+    }
+    .info-section p {
+      font-size: 13px;
+      color: #888;
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    #form-container {
+      display: none;
+      width: 100%;
+      max-width: 500px;
+      background: rgba(18, 18, 18, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 25px;
+    }
+    .form-group {
+      margin-bottom: 14px;
+      text-align: left;
+    }
+    .form-group label {
+      display: block;
+      font-size: 11px;
+      color: #888;
+      margin-bottom: 5px;
+      letter-spacing: 0.5px;
+    }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      background: #0a0a0a;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      padding: 11px;
+      border-radius: 8px;
+      font-size: 13px;
+      outline: none;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      border-color: #555;
+    }
+    .submit-btn {
+      width: 100%;
+      background: #fff;
+      color: #000;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 5px;
+      transition: opacity 0.2s;
+    }
+    .submit-btn:hover { opacity: 0.9; }
+  </style>
+</head>
+<body>
+
+  <!-- BACKGROUND ANIMATED CANVAS (NJOUM) -->
+  <canvas id="stars-canvas"></canvas>
+
+  <audio id="bg-music" loop>
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- 1. ENTER OVERLAY -->
+  <div id="enter-screen" onclick="enterShop()">
+    <div class="icon">◆</div>
+    <h2>Click To Enter Shop</h2>
+  </div>
+
+  <!-- 2. MAIN SHOP INTERFACE -->
+  <div class="main-container" id="main-content">
+    
+    <div class="shop-header">
+      <h1>Jihed Services</h1>
+    </div>
+
+    <!-- AUDIO PLAYER CARD WITH SLIDER -->
+    <div class="player-card">
+      <div class="player-top">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <i class="fas fa-music"></i>
+          <span> Some Of Love</span>
+        </div>
+        <button class="player-btn" onclick="toggleAudio()"><i id="play-icon" class="fas fa-pause"></i></button>
+      </div>
+      <div class="volume-box">
+        <i class="fas fa-volume-low"></i>
+        <input type="range" class="volume-slider" id="volume-control" min="0" max="1" step="0.01" value="0.2">
+        <i class="fas fa-volume-high"></i>
+      </div>
+    </div>
+
+    <div class="services-section">
+      <div class="section-title">Available Services</div>
+      
+      <div class="cards-grid">
+        <div class="big-card">
+          <div>
+            <div class="card-icon"><i class="fab fa-discord"></i></div>
+            <div class="card-title">Discord Bots</div>
+            <div class="card-desc">Custom Discord bots, moderation systems, ticket systems, and staff activity trackers.</div>
+          </div>
+          <button class="order-btn" onclick="openOrder('Discord Bot Development')">Order Service</button>
+        </div>
+
+        <div class="big-card">
+          <div>
+            <div class="card-icon"><i class="fas fa-code"></i></div>
+            <div class="card-title">Luau Scripting</div>
+            <div class="card-desc">Advanced Roblox & Luauscripts, custom jobs, interaction mechanics, and UI panels.</div>
+          </div>
+          <button class="order-btn" onclick="openOrder('Luau Scripting System')">Order Service</button>
+        </div>
+
+        <div class="big-card">
+          <div>
+            <div class="card-icon"><i class="fas fa-laptop-code"></i></div>
+            <div class="card-title">Web Development</div>
+            <div class="card-desc">Dark aesthetic link-in-bio pages, portfolio sites, and glassmorphism layouts.</div>
+          </div>
+          <button class="order-btn" onclick="openOrder('Web Development')">Order Service</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <div class="section-title">Information About</div>
+      <p>We deliver high-quality custom scripting, bot integration, and modern web interfaces tailored specifically for your project or community needs.</p>
+    </div>
+
+    <!-- COMPLETE YOUR ORDER FORM -->
+    <div id="form-container">
+      <div class="section-title" style="margin-bottom:15px; text-align:left;">Complete Your Order</div>
+      
+      <form action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST">
+        
+        <div class="form-group">
+          <label>Selected Service</label>
+          <input type="text" id="serviceInput" name="Service" readonly>
+        </div>
+
+        <div class="form-group">
+          <label>Contact Platform</label>
+          <select name="Contact_Platform" required>
+            <option value="Discord">Discord</option>
+            <option value="WhatsApp">WhatsApp</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Your Contact Info (Tag / Phone Number)</label>
+          <input type="text" name="Client_Contact" placeholder="Username or Number " required>
+        </div>
+
+        <div class="form-group">
+          <label>Your Gmail</label>
+          <input type="email" name="Client_Email" placeholder="@gmail.com" required>
+        </div>
+
+        <div class="form-group">
+          <label>Payment Method</label>
+          <select name="Payment_Method" required>
+            <option value="D17">D17 (La Poste)</option>
+            <option value="Flouci">Flouci</option>
+            <option value="Ooredoo Card">Ooredoo Recharging Card</option>
+            <option value="Orange Card">Orange Recharging Card</option>
+            <option value="Visa / International Card">Visa / Mastercard (International)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Project Specifications</label>
+          <textarea name="Project_Details" rows="4" placeholder="Write your requirements..." required></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">Send Commande</button>
+      </form>
+    </div>
+
+  </div>
+
+  <script>
+    // AUDIO CONTROLLER
+    const music = document.getElementById("bg-music");
+    const playIcon = document.getElementById("play-icon");
+    const volumeControl = document.getElementById("volume-control");
+
+    // SET DEFAULT VOLUME TO 20% (CALM SOUT TAYA7)
+    music.volume = 0.2;
+
+    volumeControl.addEventListener("input", function(e) {
+      music.volume = e.target.value;
+    });
+
+    function enterShop() {
+      const enterScreen = document.getElementById("enter-screen");
+      enterScreen.style.opacity = "0";
+      setTimeout(() => {
+        enterScreen.style.display = "none";
+        document.getElementById("main-content").style.display = "flex";
+      }, 600);
+
+      music.play().catch(e => console.log("Audio play blocked:", e));
+    }
+
+    function toggleAudio() {
+      if (music.paused) {
+        music.play();
+        playIcon.className = "fas fa-pause";
+      } else {
+        music.pause();
+        playIcon.className = "fas fa-play";
+      }
+    }
+
+    function openOrder(serviceName) {
+      const formContainer = document.getElementById("form-container");
+      const serviceInput = document.getElementById("serviceInput");
+      
+      serviceInput.value = serviceName;
+      formContainer.style.display = "block";
+      formContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // STARFIELD ANIMATION SCRIPT
+    const canvas = document.getElementById("stars-canvas");
+    const ctx = canvas.getContext("2d");
+
+    let stars = [];
+    const numStars = 140;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    for (let i = 0; i < numStars; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 1.5 + 0.5,
+        alpha: Math.random(),
+        speed: Math.random() * 0.01 + 0.005,
+        dy: Math.random() * 0.2 + 0.05
+      });
+    }
+
+    function animateStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      stars.forEach(star => {
+        star.alpha += star.speed;
+        if (star.alpha > 1 || star.alpha < 0.1) {
+          star.speed = -star.speed;
+        }
+
+        star.y -= star.dy;
+        if (star.y < 0) {
+          star.y = canvas.height;
+          star.x = Math.random() * canvas.width;
+        }
+
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(star.alpha)})`;
+        ctx.shadowBlur = 4;
+        ctx.shadowColor = "#ffffff";
+        ctx.fill();
+      });
+
+      requestAnimationFrame(animateStars);
+    }
+    animateStars();
+  </script>
+</body>
+</html>
