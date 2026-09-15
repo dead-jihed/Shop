@@ -312,7 +312,7 @@
       <div class="player-top">
         <div style="display:flex; align-items:center; gap:8px;">
           <i class="fas fa-music"></i>
-          <span> Some Of Love</span>
+          <span>Background Track</span>
         </div>
         <button class="player-btn" onclick="toggleAudio()"><i id="play-icon" class="fas fa-pause"></i></button>
       </div>
@@ -340,7 +340,7 @@
           <div>
             <div class="card-icon"><i class="fas fa-code"></i></div>
             <div class="card-title">Luau Scripting</div>
-            <div class="card-desc">Advanced Roblox & Luauscripts, custom jobs, interaction mechanics, and UI panels.</div>
+            <div class="card-desc">Advanced Roblox & FiveM scripts, custom jobs, interaction mechanics, and UI panels.</div>
           </div>
           <button class="order-btn" onclick="openOrder('Luau Scripting System')">Order Service</button>
         </div>
@@ -361,7 +361,7 @@
       <p>We deliver high-quality custom scripting, bot integration, and modern web interfaces tailored specifically for your project or community needs.</p>
     </div>
 
-    <!-- COMPLETE YOUR ORDER FORM -->
+    <!-- COMPLETE YOUR ORDER FORM (FORMSPREE ENDPOINT) -->
     <div id="form-container">
       <div class="section-title" style="margin-bottom:15px; text-align:left;">Complete Your Order</div>
       
@@ -382,12 +382,12 @@
 
         <div class="form-group">
           <label>Your Contact Info (Tag / Phone Number)</label>
-          <input type="text" name="Client_Contact" placeholder="Username or Number " required>
+          <input type="text" name="Client_Contact" placeholder="ex: Username#0001 or +216 20 000 000" required>
         </div>
 
         <div class="form-group">
           <label>Your Gmail</label>
-          <input type="email" name="Client_Email" placeholder="@gmail.com" required>
+          <input type="email" name="Client_Email" placeholder="your@gmail.com" required>
         </div>
 
         <div class="form-group">
@@ -418,7 +418,6 @@
     const playIcon = document.getElementById("play-icon");
     const volumeControl = document.getElementById("volume-control");
 
-    // SET DEFAULT VOLUME TO 20% (CALM SOUT TAYA7)
     music.volume = 0.2;
 
     volumeControl.addEventListener("input", function(e) {
